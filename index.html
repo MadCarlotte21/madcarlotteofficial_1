@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>madcarlotte official</title>
+<style>
+  /* Reset */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  html, body {
+    height: 100%;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #2e004f, #000000);
+    color: #ddd;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  /* Container & layout */
+  header {
+    padding: 24px 16px;
+    text-align: center;
+    background: linear-gradient(90deg, #6a00ff, #4b0082);
+    box-shadow: 0 0 20px rgba(107, 0, 255, 0.7);
+    color: white;
+    font-weight: 900;
+    font-size: 1.8rem;
+    letter-spacing: 2px;
+    user-select: none;
+  }
+
+  main {
+    padding: 32px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    min-height: calc(100vh - 96px);
+  }
+
+  /* Product Buttons */
+  .product-button {
+    width: 260px;
+    background: linear-gradient(135deg, #7c00ff, #a450f0);
+    border-radius: 12px;
+    padding: 18px 0;
+    color: white;
+    font-weight: 700;
+    font-size: 1.25rem;
+    text-align: center;
+    cursor: pointer;
+    box-shadow:
+      0 0 4px #a450f0,
+      0 4px 12px rgba(164, 80, 240, 0.4);
+    transition:
+      background 0.3s ease,
+      box-shadow 0.3s ease,
+      transform 0.3s ease;
+  }
+  .product-button:hover,
+  .product-button:focus {
+    background: linear-gradient(135deg, #9d3dff, #6928ff);
+    box-shadow:
+      0 0 8px #9d3dff,
+      0 6px 20px rgba(121, 40, 255, 0.6);
+    outline: none;
+    transform: scale(1.05);
+  }
+
+  /* Variants & Payment Containers */
+  .overlay {
+    position: fixed;
+    top: 0; left:0; right:0; bottom:0;
+    background: rgba(10, 0, 30, 0.87);
+    backdrop-filter: blur(12px);
+    z-index: 999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 32px;
+    animation: fadeIn 0.4s ease forwards;
+  }
+
+  /* Card with gradient & shadow */
+  .card {
+    background: linear-gradient(145deg, #1a004d, #3a007a);
+    border-radius: 20px;
+    padding: 32px 32px 40px 32px;
+    width: 100%;
+    max-width: 440px;
+    color: #eee;
+    box-shadow: 0 8px 24px rgba(115, 0, 255, 0.7);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Close Button */
+  .close-btn {
+    position: absolute;
+    right: 24px;
+    top: 24px;
+    background: transparent;
+    border: none;
+    font-size: 28px;
+    color: #ddd;
+    cursor: pointer;
+    transition: color 0.2s ease;
+  }
+  .close-btn:hover,
+  .close-btn:focus {
+    color: #a450f0;
+    outline: none;
+  }
+
+  /* Variant Titles */
+  .card h2 {
+    font-weight: 800;
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    user-select: none;
+  }
+
+  /* List of options */
+  ul.options-list {
+    list-style: none;
+    overflow-y: auto;
+    max-height: 300px;
+    margin-bottom: 20px;
+    padding-right: 8px;
+  }
+  ul.options-list li {
+    padding: 14px 18px;
+    border-radius: 12px;
+    margin-bottom: 14px;
+    background: rgba(255 255 255 / 0.05);
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition:
+      background-color 0.3s ease,
+      box-shadow 0.3s ease;
+    user-select: none;
+  }
+  ul.options-list li:hover,
+  ul.options-list li:focus {
+    background-color: #7c00ff;
+    box-shadow: 0 0 10px #9d3dff;
+    color: white;
+    outline: none;
+  }
+
+  /* Payment Section */
+  #payment-description {
+    background: rgba(200 200 255 / 0.1);
+    padding: 16px 20px;
+    border-radius: 14px;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    color: #ccc;
+    margin-bottom: 18px;
+  }
+
+  /* Promo Code Input */
+  #promo-code {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 12px;
+    border: none;
+    font-size: 1rem;
+    margin-bottom: 12px;
+    background: #111025;
+    color: #ddd;
+    box-shadow: inset 0 0 6px #6a00ff;
+  }
+  #promo-code::placeholder {
+    color: #666;
+  }
+
+  /* Buttons Group */
+  .buttons-row {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 14px;
+  }
+  button {
+    cursor: pointer;
+    font-weight: 700;
+    font-family: 'Poppins', sans-serif;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 24px;
+    font-size: 1rem;
+    color: white;
+    background: linear-gradient(135deg, #8000ff, #bb66ff);
+    box-shadow:
+      0 3px 8px rgba(186, 107, 255, 0.8);
+    transition:
+      background 0.3s ease,
+      box-shadow 0.3s ease,
+      transform 0.2s ease;
+    user-select: none;
+  }
+  button:hover,
+  button:focus {
+    background: linear-gradient(135deg, #bb66ff, #7f00ff);
+    box-shadow:
+      0 6px 12px rgba(186, 107, 255, 1);
+    outline:none;
+    transform: translateY(-2px);
+  }
+
+  /* Payment options container */
+  #payment-options {
+    margin-top: 10px;
+  }
+  #payment-options button {
+    flex: 1;
+  }
+
+  /* Responsive */
+  @media (max-width: 480px) {
+    .product-button {
+      width: 90vw;
+      font-size: 1.1rem;
+      padding: 14px 0;
+    }
+    .card {
+      padding: 24px 16px 32px;
+      max-width: 330px;
+    }
+    .buttons-row {
+      flex-direction: column;
+    }
+  }
+
+  /* Animations */
+  @keyframes fadeIn {
+    from {opacity:0;}
+    to {opacity:1;}
+  }
+</style>
+</head>
+<body>
+<header>
+  madcarlotte official
+</header>
+<main>
+  <button class="product-button" aria-label="Panel WhatsApp" onclick="showVariants('panel')">Tombol Panel WhatsApp</button>
+  <button class="product-button" aria-label="Saluran WhatsApp" onclick="showVariants('saluran')">Tombol Saluran WhatsApp</button>
+</main>
+
+<!-- Variants Modal -->
+<div id="variants-overlay" class="overlay" style="display:none;" aria-modal="true" role="dialog" aria-labelledby="variants-title">
+  <section class="card" tabindex="-1">
+    <button class="close-btn" aria-label="Tutup varian" onclick="closeVariants()">&times;</button>
+    <h2 id="variants-title"></h2>
+    <ul id="variants-list" class="options-list" role="list"></ul>
+  </section>
+</div>
+
+<!-- Payment Modal -->
+<div id="payment-overlay" class="overlay" style="display:none;" aria-modal="true" role="dialog" aria-labelledby="payment-title">
+  <section class="card" tabindex="-1">
+    <button class="close-btn" aria-label="Tutup pembayaran" onclick="closePayment()">&times;</button>
+    <h2 id="payment-title"></h2>
+
+    <p>Harga: <strong><span id="payment-price"></span></strong></p>
+
+    <div class="buttons-row">
+      <button onclick="showPaymentOptions()">Payment</button>
+      <button onclick="applyPromo()">Terapkan Promo</button>
+    </div>
+
+    <input type="text" id="promo-code" aria-label="Masukkan kode promo" placeholder="Masukkan kode promo" />
+
+    <div id="payment-description"></div>
+
+    <div class="buttons-row">
+      <button onclick="toggleMessageInput()">Pesan</button>
+    </div>
+
+    <div id="custom-message-container" style="display:none; margin-bottom: 16px;">
+      <textarea id="custom-message" rows="3" placeholder="Tulis pesan tambahan..." style="width:100%; border-radius:12px; border:none; padding:12px; background:#111025; color:#ddd; font-size:1rem; resize: vertical;"></textarea>
+    </div>
+
+    <p><strong>Harga Akhir: </strong><span id="final-price"></span></p>
+
+    <div class="buttons-row">
+      <button id="buy-button" onclick="buyNow()">Buy</button>
+    </div>
+
+    <div id="payment-options" class="buttons-row" style="display:none;">
+      <button onclick="selectPayment('Dana')">Dana</button>
+      <button onclick="selectPayment('Qris')">Qris</button>
+    </div>
+  </section>
+</div>
+
+<script>
+  // Data Produk dan Varian
+  const products = {
+    panel: {
+      name: "Panel WhatsApp",
+      variants: [
+        { label: "1 GB", price: 1 },
+        { label: "2 GB", price: 2 },
+        { label: "3 GB", price: 3 },
+        { label: "4 GB", price: 4 },
+        { label: "5 GB", price: 5 },
+        { label: "6 GB", price: 6 },
+        { label: "7 GB", price: 7 },
+        { label: "8 GB", price: 8 },
+        { label: "9 GB", price: 9 },
+        { label: "10 GB", price: 10 },
+        { label: "UNLIMITED", price: 12 }
+      ],
+      description:[
+        "Panel Privat",
+        "Bergaransi 30 Day",
+        "Tidak Boros kuota",
+        "Bot lebih responsif",
+        "Node 20+",
+        "No hapus server",
+        "Hapus server? Ganti"
+      ]
+    },
+    saluran: {
+      name: "Saluran WhatsApp",
+      variants: [
+        { label: "JOIN ADMIN CH", price: 5 }
+      ],
+      description:[
+        "Pengikut anti Turki",
+        "No suntik",
+        "Permanen",
+        "Ngalir terus",
+        "Bebas Promosi"
+      ]
+    }
+  };
+
+  // State untuk penyimpanan sementara
+  let selectedProduct = null;
+  let selectedVariant = null;
+  let selectedPrice = null;
+  let selectedPaymentMethod = null;
+
+  // Elemen DOM
+  const variantsOverlay = document.getElementById('variants-overlay');
+  const paymentOverlay = document.getElementById('payment-overlay');
+  const variantsTitle = document.getElementById('variants-title');
+  const variantsList = document.getElementById('variants-list');
+  const paymentTitle = document.getElementById('payment-title');
+  const paymentPrice = document.getElementById('payment-price');
+  const paymentDescription = document.getElementById('payment-description');
+  const promoCodeInput = document.getElementById('promo-code');
+  const finalPriceElement = document.getElementById('final-price');
+  const paymentOptions = document.getElementById('payment-options');
+  const customMessageContainer = document.getElementById('custom-message-container');
+  const customMessageInput = document.getElementById('custom-message');
+
+  // Fungsi menampilkan varian produk
+  function showVariants(type) {
+    selectedProduct = type;
+    variantsTitle.textContent = products[type].name;
+    variantsList.innerHTML = '';
+    paymentOptions.style.display = 'none';
+    customMessageContainer.style.display = 'none';
+    promoCodeInput.value = '';
+    finalPriceElement.textContent = '';
+    paymentDescription.textContent = '';
+    customMessageInput.value = '';
+    selectedPaymentMethod = null;
+
+    const productData = products[type];
+    productData.variants.forEach(variant => {
+      const li = document.createElement('li');
+      li.textContent = variant.label;
+      li.tabIndex = 0;
+      li.setAttribute('role', 'button');
+      li.addEventListener('click', () => goToPayment(productData.name, variant.label, variant.price));
+      li.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          goToPayment(productData.name, variant.label, variant.price);
+        }
+      });
+      variantsList.appendChild(li);
+    });
+
+    variantsOverlay.style.display = 'flex';
+    variantsOverlay.querySelector('.card').focus();
+  }
+
+  // Tutup varian
+  function closeVariants() {
+    variantsOverlay.style.display = 'none';
+    selectedVariant = null;
+  }
+
+  // Masuk ke halaman pembayaran
+  function goToPayment(productName, variantLabel, price) {
+    selectedVariant = variantLabel;
+    selectedPrice = price;
+    selectedPaymentMethod = null;
+
+    // Hapus kata 'produk' dari nama varian jika ada - di sini tidak ada, tapi jika ada Anda bisa lakukan replace
+    const cleanName = productName.replace(/produk/i, '').trim();
+
+    paymentTitle.textContent = `${cleanName} - ${variantLabel}`;
+    paymentPrice.textContent = price + ' Rp';
+    finalPriceElement.textContent = price + ' Rp';
+    promoCodeInput.value = '';
+    paymentOptions.style.display = 'none';
+    promoCodeInput.style.borderColor = '#111025';
+
+    // Set deskripsi berdasarkan produk
+    const descArr = products[selectedProduct].description;
+    paymentDescription.innerHTML = descArr.map(d => `<div>• ${d}</div>`).join('');
+
+    variantsOverlay.style.display = 'none';
+    paymentOverlay.style.display = 'flex';
+    customMessageContainer.style.display = 'none';
+    customMessageInput.value = '';
+    paymentOverlay.querySelector('.card').focus();
+  }
+
+  // Tutup pembayaran
+  function closePayment() {
+    paymentOverlay.style.display = 'none';
+    selectedVariant = null;
+    selectedProduct = null;
+    selectedPrice = null;
+    selectedPaymentMethod = null;
+  }
+
+  // Terapkan promo
+  function applyPromo() {
+    const code = promoCodeInput.value.trim();
+    if (code.toLowerCase() === 'madcarlotte') {
+      const discounted = Math.round(selectedPrice * 0.3);
+      finalPriceElement.textContent = discounted + ' Rp (70% OFF)';
+      promoCodeInput.style.borderColor = '#6cc644';
+    } else {
+      finalPriceElement.textContent = selectedPrice + ' Rp';
+      promoCodeInput.style.borderColor = '#ff4c4c';
+    }
+  }
+
+  // Toggle textarea pesan tambahan
+  function toggleMessageInput() {
+    if (customMessageContainer.style.display === 'none' || customMessageContainer.style.display === '') {
+      customMessageContainer.style.display = 'block';
+      customMessageInput.focus();
+    } else {
+      customMessageContainer.style.display = 'none';
+    }
+  }
+
+  // Tampilkan opsi pembayaran
+  function showPaymentOptions(){
+    if(paymentOptions.style.display === 'none' || paymentOptions.style.display === ''){
+      paymentOptions.style.display = 'flex';
+    } else {
+      paymentOptions.style.display = 'none';
+    }
+  }
+
+  // Pilih metode pembayaran
+  function selectPayment(method){
+    selectedPaymentMethod = method;
+    alert(`Pilihan pembayaran: ${method}`);
+  }
+
+  // Beli sekarang (buka WhatsApp dengan pesan ke nomor 083191338893)
+  function buyNow() {
+    const produk = paymentTitle.textContent;
+    const harga = finalPriceElement.textContent || paymentPrice.textContent;
+    const paymentMetode = selectedPaymentMethod ? selectedPaymentMethod : 'Belum memilih metode pembayaran';
+    let pesanTambahan = customMessageInput.value.trim();
+    if(!pesanTambahan) pesanTambahan = '[Tidak ada pesan tambahan]';
+
+    const pesanDasar = 
+      `Produk: ${produk}\n` +
+      `Harga: ${harga}\n` +
+      `Payment: ${paymentMetode}\n` +
+      `Pesan: ${pesanTambahan}`;
+
+    const waNomor = '6283191338893'; // Format kode negara Indonesia tanpa tanda +
+    const url = `https://wa.me/${waNomor}?text=${encodeURIComponent(pesanDasar)}`;
+    window.open(url, '_blank');
+  }
+
+  // Keyboard accessibility: ESC closes modals
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      if(paymentOverlay.style.display === 'flex'){
+        closePayment();
+      } else if(variantsOverlay.style.display === 'flex'){
+        closeVariants();
+      }
+    }
+  });
+</script>
+</body>
+</html>
+
